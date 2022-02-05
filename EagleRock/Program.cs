@@ -1,11 +1,17 @@
+using EagleRock.Cache;
+using StackExchange.Redis;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+//Redis DI
+var multiplexer = ConnectionMultiplexer.Connect(builder.Configuration["RedisAddress"]);
+builder.Services.AddSingleton<IConnectionMultiplexer>(multiplexer);
+builder.Services.AddTransient<ICacheService, CacheService>();
 
 var app = builder.Build();
 

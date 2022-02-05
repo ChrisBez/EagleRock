@@ -1,3 +1,4 @@
+using EagleRock.Business;
 using EagleRock.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,10 +10,12 @@ namespace EagleRock.Controllers
     {
       
         private readonly ILogger<TrafficController> _logger;
+        private readonly IEagleService _eagleService;
 
-        public TrafficController(ILogger<TrafficController> logger)
+        public TrafficController(ILogger<TrafficController> logger, IEagleService eagleService)
         {
             _logger = logger;
+            _eagleService = eagleService;
         }
 
         /// <summary>
@@ -23,9 +26,11 @@ namespace EagleRock.Controllers
         [HttpPost]
         public async Task<IActionResult> UploadData([FromBody] TrafficData data)
         {
-            return Ok();
-        }
+            var result = await _eagleService.StoreDataAsync(data);
 
+            //In prod BadRequest should return more details to the caller on what went wrong
+            return result ? Ok(): BadRequest();
+        }
 
         /// <summary>
         /// Endpoint for drone to upload it current data payload
@@ -35,8 +40,7 @@ namespace EagleRock.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCurrentStats()
         {
-            var allBotsData = new List<TrafficData>();
-
+            var allBotsData = await _eagleService.GetAllDataAsync();
 
             return Ok(allBotsData);
         }

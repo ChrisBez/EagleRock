@@ -1,20 +1,38 @@
-﻿using EagleRock.Models;
+﻿using EagleRock.Cache;
+using EagleRock.Models;
 
 namespace EagleRock.Business
 {
-    public class EagleService
+    /// <inheritdoc/>
+    public class EagleService: IEagleService
     {
-        public bool StoreData(TrafficData data)
+        private ILogger _logger;
+        private ICacheService _cacheService;
+
+        public EagleService(ILogger logger, ICacheService cacheService)
         {
-            if (data is not null)
+            _logger = logger;
+            _cacheService = cacheService;
+        }
+
+        /// <inheritdoc/>
+        public async Task<bool> StoreDataAsync(TrafficData data)
+        {
+            if (data is not null) //Assume this null check is some sort of business rule validation
             { 
-                return true; 
+                //TODO: send to service bus
+
+                return await _cacheService.AddEntryAsync(data);
             }
 
-
+            _logger.LogWarning("EagleService.StartDataAsync: Invalid TrafficData sent from Bot");
             return false;
         }
 
-
+        /// <inheritdoc/>
+        public async Task<IEnumerable<TrafficData>> GetAllDataAsync()
+        {
+            return await _cacheService.GetCurrentDataAsync();
+        }
     }
 }
