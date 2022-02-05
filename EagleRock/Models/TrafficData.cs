@@ -41,13 +41,13 @@ namespace EagleRock.Models
         /// Vehicles per minute
         /// </summary>
         /// <example>24.3</example>
-        public decimal? TrafficFlowRate { get; set; }
+        public double? TrafficFlowRate { get; set; }
 
         /// <summary>
         /// Mean speed in Km/h
         /// </summary>
         /// <example>68.7</example>
-        public decimal? AverageVehicalSpeed { get; set; }
+        public double? AverageVehicalSpeed { get; set; }
     }
 
 }
