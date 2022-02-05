@@ -52,29 +52,6 @@ namespace EagleRock.Testing
             _cacheServiceMock.Verify(c => c.AddEntryAsync(It.IsAny<TrafficData>()));
         }
 
-
-        [Theory]
-        [InlineData(-26.968954300826354, 149.38268968098322, true)] //In Australia
-        public async void Service_Correctly_Validates_Coords_Are_In_Oz(double latitude, double longitude, bool expected)
-        {
-            //Arrange
-            _cacheServiceMock.Setup(cache => cache.AddEntryAsync(It.IsAny<TrafficData>()).Result).Returns(true);
-            var sut = new EagleService(_loggerMock.Object, _cacheServiceMock.Object);
-            var payload = GetValidPayload();
-            
-            //overwrite lat long with ones for this theory
-            payload.Latitude = latitude;
-            payload.Longitude = longitude;
-
-            //Act
-            var result = await sut.StoreDataAsync(payload);
-
-            //Assert
-            Assert.Equal(result, expected);
-            _cacheServiceMock.Verify(c => c.AddEntryAsync(It.IsAny<TrafficData>()));
-        }
-
-
         [Theory]
         [InlineData(-27.623069255225083, 159.95153672634183, false)] //Too East
         [InlineData(1.9136021763806133, 139.0775144953842, false)] //Too North
@@ -106,6 +83,8 @@ namespace EagleRock.Testing
                (Func<It.IsAnyType, Exception, string>)It.IsAny<object>())
             );
         }
+
+        //TODO: Same style of tests for retrieval
 
         private TrafficData GetValidPayload()
         {
