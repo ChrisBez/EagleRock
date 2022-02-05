@@ -22,8 +22,11 @@ namespace EagleRock.Controllers
         /// Endpoint for drone to upload it current data payload
         /// </summary>
         /// <param name="data">The Payload in json</param>
-        /// <returns>Empty Ok</returns>
+        /// <returns>Empty Ok, 400 if something went wrong</returns>
+        
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UploadData([FromBody] TrafficData data)
         {
             var result = await _eagleService.StoreDataAsync(data);
@@ -36,8 +39,10 @@ namespace EagleRock.Controllers
         /// Endpoint for drone to upload it current data payload
         /// </summary>
         /// <param name="data">The Payload in json</param>
-        /// <returns>Empty Ok</returns>
+        /// <returns>List of the saved Data</returns>
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetCurrentStats()
         {
             var allBotsData = await _eagleService.GetAllDataAsync();
