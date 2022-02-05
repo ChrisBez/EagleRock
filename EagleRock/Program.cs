@@ -1,3 +1,4 @@
+using EagleRock.Business;
 using EagleRock.Cache;
 using StackExchange.Redis;
 
@@ -12,6 +13,7 @@ builder.Services.AddSwaggerGen();
 var multiplexer = ConnectionMultiplexer.Connect(builder.Configuration["RedisAddress"]);
 builder.Services.AddSingleton<IConnectionMultiplexer>(multiplexer);
 builder.Services.AddTransient<ICacheService, CacheService>();
+builder.Services.AddTransient<IEagleService, EagleService>();
 
 var app = builder.Build();
 

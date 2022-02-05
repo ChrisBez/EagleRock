@@ -9,10 +9,9 @@ namespace EagleRock.Cache
     {
         private readonly IConnectionMultiplexer _redis;
 
-        private readonly ILogger _logger;
+        private readonly ILogger<CacheService> _logger;
 
-
-        public CacheService(IConnectionMultiplexer redis, ILogger logger)
+        public CacheService(IConnectionMultiplexer redis, ILogger<CacheService> logger)
         {
             _redis = redis;
             _logger = logger;

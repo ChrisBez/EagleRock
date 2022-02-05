@@ -6,10 +6,10 @@ namespace EagleRock.Business
     /// <inheritdoc/>
     public class EagleService: IEagleService
     {
-        private ILogger _logger;
+        private ILogger<EagleService> _logger;
         private ICacheService _cacheService;
 
-        public EagleService(ILogger logger, ICacheService cacheService)
+        public EagleService(ILogger<EagleService> logger, ICacheService cacheService)
         {
             _logger = logger;
             _cacheService = cacheService;
