@@ -7,11 +7,15 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(opt =>
+{
+    opt.IncludeXmlComments(Path.Combine(System.AppContext.BaseDirectory, "EagleRock.xml"));
+});
 
-//Redis DI
+//Redis DI as per googling
 var multiplexer = ConnectionMultiplexer.Connect(builder.Configuration["RedisAddress"]);
 builder.Services.AddSingleton<IConnectionMultiplexer>(multiplexer);
+
 builder.Services.AddTransient<ICacheService, CacheService>();
 builder.Services.AddTransient<IEagleService, EagleService>();
 

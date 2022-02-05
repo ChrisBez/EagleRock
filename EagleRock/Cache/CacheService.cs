@@ -24,7 +24,6 @@ namespace EagleRock.Cache
             {
                 var db = _redis.GetDatabase();
 
-                //happy path
                 if (await db.StringSetAsync($"Bot: {data.BotId}", JsonSerializer.Serialize(data)))
                 {
                     return true;
@@ -49,10 +48,10 @@ namespace EagleRock.Cache
             {
                 var currentData = new List<TrafficData>();
                 
-                //for test assuming only one Server and one DB, would imporve this configuration in prod
+                //for this dummy app I'm assuming only one Server and one DB
                 var server = _redis.GetServer(_redis.GetEndPoints().First());
 
-                // Not sure this is best practice for Redis, it appears that using Redis Hash is the right way to do this.
+                //Not sure this is best practice for Redis, but it works. It appears that using Redis Hash is the right way to do this.
                 foreach(var key in server.Keys(pattern: "Bot*"))
                 {
                     var entry = await GetEntryAsync(key);
@@ -77,8 +76,8 @@ namespace EagleRock.Cache
 
 
         /// <summary>
-        /// retrieves and Deserialises the Traffic Data at the Key.
-        /// Assumes the Value can be converted to the TrafficData Type
+        /// Retrieves and Deserialises the Traffic Data at the Key.
+        /// Assumes the value can be converted to the TrafficData Type
         /// </summary>
         /// <param name="key">Redis Key</param>
         /// <returns>The TrafficData entry, or null if unsuccessful</returns>
