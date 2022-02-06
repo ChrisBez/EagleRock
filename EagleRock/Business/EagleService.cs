@@ -1,5 +1,6 @@
 ﻿using EagleRock.Cache;
 using EagleRock.Models;
+using EagleRock.Publisher;
 
 namespace EagleRock.Business
 {
@@ -8,9 +9,11 @@ namespace EagleRock.Business
     {
         private ILogger<EagleService> _logger;
         private ICacheService _cacheService;
+        private IMessagingService _messagingService;
 
-        public EagleService(ILogger<EagleService> logger, ICacheService cacheService)
+        public EagleService(ILogger<EagleService> logger, ICacheService cacheService, IMessagingService messagingService)
         {
+            _messagingService = messagingService;
             _logger = logger;
             _cacheService = cacheService;
         }
@@ -23,7 +26,7 @@ namespace EagleRock.Business
                 return false;
             }
 
-            //TODO: send to service bus
+            await _messagingService.PublishTrafficDataAsync(data);
             return await _cacheService.AddEntryAsync(data);
         }
 

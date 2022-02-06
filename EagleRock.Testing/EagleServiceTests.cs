@@ -1,6 +1,7 @@
 using EagleRock.Business;
 using EagleRock.Cache;
 using EagleRock.Models;
+using EagleRock.Publisher;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System;
@@ -11,12 +12,13 @@ namespace EagleRock.Testing
     public class EagleServiceTests
     {
         private readonly Mock<ICacheService> _cacheServiceMock;
+        private readonly Mock<IMessagingService> _messagingServiceMock;
         private readonly Mock<ILogger<EagleService>> _loggerMock;
 
         public EagleServiceTests()
         {
             _cacheServiceMock = new Mock<ICacheService>();
-
+            _messagingServiceMock = new Mock<IMessagingService>();
             _loggerMock = new Mock<ILogger<EagleService>>();
         }
 
@@ -25,7 +27,7 @@ namespace EagleRock.Testing
         {
             //Arrange
             _cacheServiceMock.Setup(cache => cache.AddEntryAsync(It.IsAny<TrafficData>()).Result).Returns(true);
-            var sut = new EagleService(_loggerMock.Object, _cacheServiceMock.Object);
+            var sut = new EagleService(_loggerMock.Object, _cacheServiceMock.Object, _messagingServiceMock.Object);
             var payload = GetValidPayload();
 
             //Act
@@ -41,7 +43,7 @@ namespace EagleRock.Testing
         {
             //Arrange
             _cacheServiceMock.Setup(cache => cache.AddEntryAsync(It.IsAny<TrafficData>()).Result).Returns(false);
-            var sut = new EagleService(_loggerMock.Object, _cacheServiceMock.Object);
+            var sut = new EagleService(_loggerMock.Object, _cacheServiceMock.Object, _messagingServiceMock.Object);
             var payload = GetValidPayload();
 
             //Act
@@ -61,7 +63,7 @@ namespace EagleRock.Testing
         {
             //Arrange
             _cacheServiceMock.Setup(cache => cache.AddEntryAsync(It.IsAny<TrafficData>()).Result).Returns(true);
-            var sut = new EagleService(_loggerMock.Object, _cacheServiceMock.Object);
+            var sut = new EagleService(_loggerMock.Object, _cacheServiceMock.Object, _messagingServiceMock.Object);
             var payload = GetValidPayload();
 
             //overwrite lat long with ones for this theory

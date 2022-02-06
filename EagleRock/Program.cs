@@ -1,5 +1,7 @@
 using EagleRock.Business;
 using EagleRock.Cache;
+using EagleRock.Publisher;
+using MassTransit;
 using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,8 +18,20 @@ builder.Services.AddSwaggerGen(opt =>
 var multiplexer = ConnectionMultiplexer.Connect(builder.Configuration["RedisAddress"]);
 builder.Services.AddSingleton<IConnectionMultiplexer>(multiplexer);
 
+builder.Services.AddMassTransit(m =>
+{
+    m.UsingRabbitMq((r, c) =>
+    {
+        c.Host(builder.Configuration["RabbitMqAddress"]);
+    });
+});
+
+builder.Services.AddMassTransitHostedService();
+
+
 builder.Services.AddTransient<ICacheService, CacheService>();
 builder.Services.AddTransient<IEagleService, EagleService>();
+builder.Services.AddTransient<IMessagingService, MessagingService>();
 
 var app = builder.Build();
 
@@ -27,6 +41,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+//TODO: Implement the asp.net core HealthCheck
 
 app.UseAuthorization();
 
