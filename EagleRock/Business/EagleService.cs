@@ -1,6 +1,7 @@
 ﻿using EagleRock.Cache;
 using EagleRock.Models;
 using EagleRock.Publisher;
+using Microsoft.FeatureManagement;
 
 namespace EagleRock.Business
 {
@@ -10,12 +11,14 @@ namespace EagleRock.Business
         private ILogger<EagleService> _logger;
         private ICacheService _cacheService;
         private IMessagingService _messagingService;
+        private IFeatureManager _featureManager;
 
-        public EagleService(ILogger<EagleService> logger, ICacheService cacheService, IMessagingService messagingService)
+        public EagleService(ILogger<EagleService> logger, ICacheService cacheService, IMessagingService messagingService, IFeatureManager featureManager)
         {
             _messagingService = messagingService;
             _logger = logger;
             _cacheService = cacheService;
+            _featureManager = featureManager;
         }
 
         /// <inheritdoc/>
@@ -25,6 +28,8 @@ namespace EagleRock.Business
             {
                 return false;
             }
+
+            if(await _featureManager.IsEnabledAsync(FeatureFlags.RabbitMq))
 
             await _messagingService.PublishTrafficDataAsync(data);
             return await _cacheService.AddEntryAsync(data);

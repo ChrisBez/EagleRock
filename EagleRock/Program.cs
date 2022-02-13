@@ -2,6 +2,7 @@ using EagleRock.Business;
 using EagleRock.Cache;
 using EagleRock.Publisher;
 using MassTransit;
+using Microsoft.FeatureManagement;
 using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +18,9 @@ builder.Services.AddSwaggerGen(opt =>
 //Redis DI as per googling
 var multiplexer = ConnectionMultiplexer.Connect(builder.Configuration["RedisAddress"]);
 builder.Services.AddSingleton<IConnectionMultiplexer>(multiplexer);
+
+
+builder.Services.AddFeatureManagement();
 
 builder.Services.AddMassTransit(m =>
 {

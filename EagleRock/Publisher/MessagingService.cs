@@ -20,7 +20,7 @@ namespace EagleRock.Publisher
         /// <inheritdoc/>
         public async Task PublishTrafficDataAsync(TrafficData data)
         {
-            //TODO: reformat TrafficData to be an interface, as per MassTransit recommends
+            //TODO: reformat the TrafficData Class to be an interface, as per MassTransit recommendations
             await _publishEndpoint.Publish(data);
         }
     }
