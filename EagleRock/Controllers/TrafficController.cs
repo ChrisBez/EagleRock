@@ -19,7 +19,7 @@ namespace EagleRock.Controllers
         }
 
         /// <summary>
-        /// Endpoint for drone to upload it current data payload
+        /// Endpoint for drone to upload its current data payload
         /// </summary>
         /// <param name="data">The Payload in json</param>
         /// <returns>Empty Ok, 400 if something went wrong</returns>
@@ -31,12 +31,13 @@ namespace EagleRock.Controllers
         {
             var result = await _eagleService.StoreDataAsync(data);
 
-            //In prod BadRequest should return more details to the caller on what went wrong
+            //TODO: Split this Badrequest into a 400 and 500 response depending on what broke.
+            // 400 = Drone submitted a bad payload, 500 = API is in a fault state (e.g. Redis is down)
             return result ? Ok(): BadRequest();
         }
 
         /// <summary>
-        /// Endpoint for drone to upload it current data payload
+        /// Endpoint that will retrieve the latest data for each drone
         /// </summary>
         /// <param name="data">The Payload in json</param>
         /// <returns>List of the saved Data</returns>
