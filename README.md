@@ -1,7 +1,13 @@
 # EagleRock
 
-Getting started. Need Redis installed.
-For me I'm just running Redis in docker via:
+To run this application, You'll need to install Redis.
+You can get Redis running by running the following docker:
 ```
 docker run -d --cap-add sys_resource --name rp -p 8443:8443 -p 9443:9443 -p 12000:12000 redislabs/redis
 ```
+
+The demo app is not 100%, here's some things I would have liked to have finished.
+1. Improved Test coverage, would have liked to get that up higher for the demo. Big ticket things to test would be the RabbitMQ layer, and the data retrival feature.
+2. Have my RabbitMQ implementation working with a real RabbitMQ hosted in Docker. Didn't get that far so I wrapped my RabbitMQ calls in a feature management flag
+3. Dig into Redis retrieval best practices a bit more. I think there's a better approach out there compared to the one I implemented
+4. Worked on the things I've flagged with TODO in the source code
