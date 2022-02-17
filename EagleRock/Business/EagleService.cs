@@ -30,8 +30,10 @@ namespace EagleRock.Business
             }
 
             if(await _featureManager.IsEnabledAsync(FeatureFlags.RabbitMq))
-
-            await _messagingService.PublishTrafficDataAsync(data);
+            {
+                await _messagingService.PublishTrafficDataAsync(data);
+            }
+            
             return await _cacheService.AddEntryAsync(data);
         }
 
